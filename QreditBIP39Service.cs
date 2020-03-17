@@ -13,7 +13,7 @@ namespace Qredit
         [FunctionName("GenerateRandomMnemonic")]
         public static IActionResult GenerateRandomMnemonic([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
         {
-            return new OkObjectResult(new BIP39().GenerateMnemonic(256, BIP39Wordlist.English).Trim().Replace("\r", ""));
+            return new OkObjectResult(new BIP39().GenerateMnemonic(128, BIP39Wordlist.English).Trim().Replace("\r", ""));
         }
 
         [FunctionName("GetKeyFromMnemonic")]
