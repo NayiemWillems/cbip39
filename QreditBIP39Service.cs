@@ -14,7 +14,18 @@ namespace Qredit
     public static class QreditBIP39Service
     {
         [FunctionName("GenerateRandomMnemonic")]
-        public static async Task<IActionResult> Run(
+        public static IActionResult GenerateRandomMnemonic([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req, ILogger log)
+        {
+
+            BIP39 bip39 = new BIP39();
+
+            var dataMen = bip39.GenerateMnemonic(256, BIP39Wordlist.English).Trim().Split("\r");
+
+            return new JsonResult(dataMen);
+        }
+
+        [FunctionName("GetKeyFromMnemonic")]
+        public static async Task<IActionResult> GetKeyFromMnemonic(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
@@ -33,9 +44,11 @@ namespace Qredit
 
             BIP39 bip39 = new BIP39();
 
-            var dataMen = bip39.GenerateMnemonic(12, BIP39Wordlist.English);
+            var dataMen = bip39.GenerateMnemonic(256, BIP39Wordlist.English);
 
-            return new OkObjectResult(dataMen);
+            var key = bip39.MnemonicToSeedHex(dataMen, string.Empty);
+
+            return new OkObjectResult(key);
         }
     }
 }
